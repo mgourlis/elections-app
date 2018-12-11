@@ -24,6 +24,7 @@ import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 @Configuration
 @EnableWebSecurity
@@ -53,7 +54,7 @@ import org.springframework.security.web.authentication.session.RegisterSessionAu
     * For calls to other Rest APIs with keycloak authentication
     */
    @Bean
-   @Scope("prototype")
+   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
    public KeycloakRestTemplate keycloakRestTemplate() {
        return new KeycloakRestTemplate(keycloakClientRequestFactory);
    }
@@ -73,12 +74,13 @@ import org.springframework.security.web.authentication.session.RegisterSessionAu
       super.configure(http);
       http
             .authorizeRequests()
-            .antMatchers("/elections*").hasRole("USER")
-            .antMatchers("/elections/ypes*").hasRole("YPES_USER")
-            .antMatchers("/elections/periphery*").hasRole("PERIPHERY_USER")
-            .antMatchers("/elections/ota*").hasRole("OTA_USER")
-            .antMatchers("/admin*").hasRole("ADMIN")
-            .anyRequest().authenticated();
+            .antMatchers("/v1/elections/**").hasAnyRole("USER")
+            .antMatchers("/v1/elections/ypes/**").hasRole("YPES_USER")
+            .antMatchers("/v1/elections/periphery/**").hasRole("PERIPHERY_USER")
+            .antMatchers("/v1/elections/ota/**").hasRole("OTA_USER")
+            .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/user/**").hasAuthority("USER")
+            .anyRequest().permitAll();
    }
    
    @Bean
