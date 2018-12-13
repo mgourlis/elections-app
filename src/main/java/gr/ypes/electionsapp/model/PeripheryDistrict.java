@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -28,8 +27,7 @@ public class PeripheryDistrict extends BaseEntity {
     @Column(name = "name",nullable = false)
     private String name;
     
-    @Column(name = "isCapital")
-    @NotNull
+    @Column(name = "isCapital",nullable = false)
     private boolean isCapital;
     
     @ManyToOne(fetch=FetchType.LAZY)
