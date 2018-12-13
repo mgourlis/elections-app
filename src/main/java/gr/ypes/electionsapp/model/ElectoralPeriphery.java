@@ -1,7 +1,8 @@
 package gr.ypes.electionsapp.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.AttributeOverride;
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -23,20 +25,14 @@ import javax.persistence.Table;
 @AttributeOverride(name = "id", column = @Column(name = "electoralPeriphery_id", nullable = false, columnDefinition = "BIGINT"))
 public class ElectoralPeriphery extends BaseEntity{
     
-    @Column(name = "code", nullable = false, unique = true, length = 2)
+    @Column(name = "code", unique = true, length = 2, nullable = false)
     private String code;
     
     @Column(name = "name", nullable = false)
     private String name;
     
-    @Column(name = "isEforosAttended", nullable = false)
-    private boolean isEforosAttended;
-    
-    @Column(name = "totalSubstitutes")
-    private int totalSubstitutes;
-    
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="greekPeriphery_id")
+    @JoinColumn(name="greekPeriphery_id", nullable = false)
     private GreekPeriphery greekPeriphery;
     
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -45,92 +41,14 @@ public class ElectoralPeriphery extends BaseEntity{
         inverseJoinColumns = @JoinColumn(name = "peripheryDistrict_id")
     )
     private Set<PeripheryDistrict> peripheryDistricts = new HashSet<>();
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean isIsEforosAttended() {
-        return isEforosAttended;
-    }
-
-    public void setIsEforosAttended(boolean isEforosAttended) {
-        this.isEforosAttended = isEforosAttended;
-    }
-
-    public int getTotalSubstitutes() {
-        return totalSubstitutes;
-    }
-
-    public void setTotalSubstitutes(int totalSubstitutes) {
-        this.totalSubstitutes = totalSubstitutes;
-    }
-
-    public GreekPeriphery getGreekPeriphery() {
-        return greekPeriphery;
-    }
-
-    public void setGreekPeriphery(GreekPeriphery greekPeriphery) {
-        this.greekPeriphery = greekPeriphery;
-    }
-
-    public Set<PeripheryDistrict> getPeripheryDistricts() {
-        return peripheryDistricts;
-    }
     
-    public void addPeripheryDistrict(PeripheryDistrict peripheryDistrict){
-        this.peripheryDistricts.add(peripheryDistrict);
-    }
-
-    public void removePeripheryDistrict(PeripheryDistrict peripheryDistrict){
-        this.peripheryDistricts.remove(peripheryDistrict);
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "electoralPeriphery")
+    private List<Ota> otas = new ArrayList<>();
     
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.code);
-        hash = 23 * hash + Objects.hashCode(this.name);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ElectoralPeriphery other = (ElectoralPeriphery) obj;
-        if (!Objects.equals(this.code, other.code)) {
-            return false;
-        }
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "ElectoralPeriphery{" + "code=" + code + ", name=" + name + ", isEforosAttended=" + isEforosAttended + ", totalSubstitutes=" + totalSubstitutes + '}';
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "electoralPeriphery")
+    private List<OtaDistrict> otaDistricts = new ArrayList<>();
     
-    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "electoralPeriphery")
+    private List<ElectoralDepartment> electoralDepartments = new ArrayList<>();
+
 }
