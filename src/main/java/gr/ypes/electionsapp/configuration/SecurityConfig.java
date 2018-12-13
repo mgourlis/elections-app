@@ -74,12 +74,12 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
       super.configure(http);
       http
             .authorizeRequests()
-            .antMatchers("/v1/elections/**").hasAnyRole("USER")
-            .antMatchers("/v1/elections/ypes/**").hasRole("YPES_USER")
-            .antMatchers("/v1/elections/periphery/**").hasRole("PERIPHERY_USER")
-            .antMatchers("/v1/elections/ota/**").hasRole("OTA_USER")
-            .antMatchers("/admin/**").hasRole("ADMIN")
-            .antMatchers("/user/**").hasAuthority("USER")
+            .antMatchers("/v1/elections/**").hasRole("user")
+            .antMatchers("/v1/elections/ypes/**").hasRole("ypes_user")
+            .antMatchers("/v1/elections/periphery/**").hasRole("periphery_user")
+            .antMatchers("/v1/elections/ota/**").hasRole("ota_user")
+            .antMatchers("/admin/**").hasRole("admin")
+            .antMatchers("/user/**").hasRole("user")
             .anyRequest().permitAll();
    }
    
